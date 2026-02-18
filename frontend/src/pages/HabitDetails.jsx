@@ -14,6 +14,7 @@ const HabitDetails = () => {
   
   useEffect(() => {
     fetchHabit();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
   
   const fetchHabit = async () => {
