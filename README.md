@@ -127,9 +127,16 @@ The app provides three types of cost awareness:
 2. **Time Cost**: How many hours of work it takes to afford it
 3. **Opportunity Cost**: What you're giving up to maintain this habit
 
-## 🎨 Screenshots
+## 🎨 Live Demo
 
-*Add screenshots here once deployed*
+**Frontend:** https://habit-cost-calculator-39gk.vercel.app  
+**Backend API:** https://habit-cost-calculator-backend.onrender.com
+
+⚠️ **Note:** The first load may take 30-60 seconds as the free backend server spins up from sleep.
+
+## Screenshots
+
+*Screenshots coming soon*
 
 ## 🔮 Future Enhancements
 
