@@ -1,98 +1,51 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import axios from 'axios';
-
-const API_URL = process.env.REACT_APP_API_URL ? `${process.env.REACT_APP_API_URL}/api` : 'http://localhost:5000/api';
+import { getWage, saveWage, getGoals, addGoal, deleteGoal } from '../storage';
 
 const Settings = () => {
   const [wage, setWage] = useState('');
   const [goals, setGoals] = useState([]);
   const [showAddGoal, setShowAddGoal] = useState(false);
   const [newGoal, setNewGoal] = useState({ name: '', target_amount: '' });
-  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  
+
   useEffect(() => {
-    fetchData();
+    setWage(getWage().toString());
+    setGoals(getGoals());
   }, []);
-  
-  const fetchData = async () => {
-    try {
-      const [wageRes, goalsRes] = await Promise.all([
-        axios.get(`${API_URL}/settings/wage`),
-        axios.get(`${API_URL}/goals`)
-      ]);
-      
-      setWage(wageRes.data.wage.toString());
-      setGoals(goalsRes.data);
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      setLoading(false);
-    }
-  };
-  
-  const handleSaveWage = async (e) => {
+
+  const handleSaveWage = (e) => {
     e.preventDefault();
     setSaving(true);
-    
-    try {
-      await axios.post(`${API_URL}/settings/wage`, {
-        wage: parseFloat(wage) || 0
-      });
-      
-      alert('Wage saved successfully!');
-      setSaving(false);
-    } catch (error) {
-      console.error('Error saving wage:', error);
-      alert('Failed to save wage');
-      setSaving(false);
-    }
+    saveWage(parseFloat(wage) || 0);
+    setSaving(false);
+    alert('Wage saved successfully!');
   };
-  
-  const handleAddGoal = async (e) => {
+
+  const handleAddGoal = (e) => {
     e.preventDefault();
-    
+
     if (!newGoal.name || !newGoal.target_amount) {
       alert('Please fill in all fields');
       return;
     }
-    
-    try {
-      await axios.post(`${API_URL}/goals`, {
-        name: newGoal.name,
-        target_amount: parseFloat(newGoal.target_amount)
-      });
-      
-      setNewGoal({ name: '', target_amount: '' });
-      setShowAddGoal(false);
-      fetchData();
-    } catch (error) {
-      console.error('Error adding goal:', error);
-      alert('Failed to add goal');
-    }
+
+    addGoal({
+      name:          newGoal.name,
+      target_amount: parseFloat(newGoal.target_amount),
+    });
+
+    setNewGoal({ name: '', target_amount: '' });
+    setShowAddGoal(false);
+    setGoals(getGoals());
   };
-  
-  const handleDeleteGoal = async (goalId) => {
+
+  const handleDeleteGoal = (goalId) => {
     if (!window.confirm('Are you sure you want to delete this goal?')) return;
-    
-    try {
-      await axios.delete(`${API_URL}/goals/${goalId}`);
-      fetchData();
-    } catch (error) {
-      console.error('Error deleting goal:', error);
-      alert('Failed to delete goal');
-    }
+    deleteGoal(goalId);
+    setGoals(getGoals());
   };
-  
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen bg-dark-bg">
-        <div className="text-2xl text-gray-400">Loading...</div>
-      </div>
-    );
-  }
-  
+
   return (
     <div className="min-h-screen bg-dark-bg">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -102,7 +55,7 @@ const Settings = () => {
         >
           <h1 className="text-3xl font-bold text-white mb-2">Settings</h1>
           <p className="text-gray-400 mb-8">Customize your habit tracking experience</p>
-          
+
           {/* Hourly Wage */}
           <div className="bg-dark-card border border-dark-border rounded-2xl p-8 mb-8">
             <form onSubmit={handleSaveWage}>
@@ -114,7 +67,7 @@ const Settings = () => {
                   Set your hourly wage to calculate how many hours of work each habit costs you.
                   Enter 0 if you don't earn an hourly wage.
                 </p>
-                
+
                 <div className="relative">
                   <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl">
                     $
@@ -132,7 +85,7 @@ const Settings = () => {
                   </span>
                 </div>
               </div>
-              
+
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
@@ -144,7 +97,7 @@ const Settings = () => {
               </motion.button>
             </form>
           </div>
-          
+
           {/* Savings Goals */}
           <div className="bg-dark-card border border-dark-border rounded-2xl p-8 mb-8">
             <div className="flex justify-between items-center mb-6">
@@ -154,7 +107,7 @@ const Settings = () => {
                   Add things you're saving for to see how your habits affect your goals
                 </p>
               </div>
-              
+
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -164,7 +117,7 @@ const Settings = () => {
                 + Add Goal
               </motion.button>
             </div>
-            
+
             {/* Add Goal Form */}
             <AnimatePresence>
               {showAddGoal && (
@@ -213,7 +166,7 @@ const Settings = () => {
                 </motion.form>
               )}
             </AnimatePresence>
-            
+
             {/* Goals List */}
             {goals.length === 0 ? (
               <p className="text-gray-500 text-center py-8">
@@ -245,7 +198,7 @@ const Settings = () => {
               </div>
             )}
           </div>
-          
+
           {/* Tips */}
           <div className="bg-dark-card border border-dark-border rounded-2xl p-8">
             <h3 className="text-lg font-semibold text-white mb-3">💡 Tips</h3>

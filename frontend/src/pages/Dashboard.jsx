@@ -1,69 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import axios from 'axios';
 import HabitCard from '../components/HabitCard';
 import StatsCard from '../components/StatsCard';
 import AddHabitForm from '../components/AddHabitForm';
-
-const API_URL = process.env.REACT_APP_API_URL ? `${process.env.REACT_APP_API_URL}/api` : 'http://localhost:5000/api';
+import { getHabits, addHabit, deleteHabit, getStats } from '../storage';
 
 const Dashboard = () => {
   const [habits, setHabits] = useState([]);
   const [stats, setStats] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
-  const [loading, setLoading] = useState(true);
-  
+
   useEffect(() => {
-    fetchData();
+    loadData();
   }, []);
-  
-  const fetchData = async () => {
-    try {
-      const [habitsRes, statsRes] = await Promise.all([
-        axios.get(`${API_URL}/habits`),
-        axios.get(`${API_URL}/stats`)
-      ]);
-      
-      setHabits(habitsRes.data);
-      setStats(statsRes.data);
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      setLoading(false);
-    }
+
+  const loadData = () => {
+    setHabits(getHabits());
+    setStats(getStats());
   };
-  
-  const handleAddHabit = async (habitData) => {
-    try {
-      await axios.post(`${API_URL}/habits`, habitData);
-      fetchData();
-      setShowAddForm(false);
-    } catch (error) {
-      console.error('Error adding habit:', error);
-      alert('Failed to add habit');
-    }
+
+  const handleAddHabit = (habitData) => {
+    addHabit(habitData);
+    loadData();
+    setShowAddForm(false);
   };
-  
-  const handleDeleteHabit = async (id) => {
+
+  const handleDeleteHabit = (id) => {
     if (!window.confirm('Are you sure you want to delete this habit?')) return;
-    
-    try {
-      await axios.delete(`${API_URL}/habits/${id}`);
-      fetchData();
-    } catch (error) {
-      console.error('Error deleting habit:', error);
-      alert('Failed to delete habit');
-    }
+    deleteHabit(id);
+    loadData();
   };
-  
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-2xl text-gray-400">Loading...</div>
-      </div>
-    );
-  }
-  
+
   return (
     <div className="min-h-screen bg-dark-bg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -101,14 +68,14 @@ const Dashboard = () => {
             )}
           </div>
         )}
-        
+
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div>
             <h2 className="text-3xl font-bold text-white mb-2">Your Habits</h2>
             <p className="text-gray-400">Track the true cost of your daily routines</p>
           </div>
-          
+
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -118,7 +85,7 @@ const Dashboard = () => {
             + Add Habit
           </motion.button>
         </div>
-        
+
         {/* Habits Grid */}
         {habits.length === 0 ? (
           <div className="text-center py-20">
@@ -146,7 +113,7 @@ const Dashboard = () => {
           </div>
         )}
       </div>
-      
+
       {/* Add Habit Modal */}
       <AnimatePresence>
         {showAddForm && (
