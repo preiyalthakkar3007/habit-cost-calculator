@@ -2,7 +2,7 @@
 
 A web application that reveals the true financial impact of your daily habits by calculating costs over time and showing how they affect your personal savings goals.
 
-![Habit Cost Calculator](https://img.shields.io/badge/React-18.x-blue) ![Flask](https://img.shields.io/badge/Flask-3.x-green) ![Python](https://img.shields.io/badge/Python-3.8+-yellow)
+![React](https://img.shields.io/badge/React-19.x-blue) ![Vercel](https://img.shields.io/badge/Deployed-Vercel-black) ![localStorage](https://img.shields.io/badge/Storage-localStorage-orange)
 
 ## 🎯 The Problem
 
@@ -22,7 +22,7 @@ We often underestimate how small daily expenses add up over time. A $6 coffee do
 
 ### ⏰ Time Cost Calculator
 - Set your hourly wage to see habits in terms of **work hours**
-- Understand that $100/month habit = 60 hours of work per year
+- Understand that a $100/month habit = 60 hours of work per year
 - Optional feature — set wage to $0 if not applicable
 
 ### 🌙 Modern UI/UX
@@ -33,24 +33,17 @@ We often underestimate how small daily expenses add up over time. A $6 coffee do
 
 ## 🛠️ Tech Stack
 
-**Frontend:**
-- React 18 with React Router
-- Tailwind CSS for styling
-- Framer Motion for animations
-- Recharts for data visualization
-- Axios for API calls
-
-**Backend:**
-- Flask (Python)
-- SQLite database
-- RESTful API architecture
+- **React 19** with React Router — UI and client-side routing
+- **Tailwind CSS** — styling
+- **Framer Motion** — animations
+- **Recharts** — data visualizations
+- **localStorage** — all data (habits, goals, wage) persisted locally in the browser; no backend or account required
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Python 3.8+
 - Node.js 14+
-- npm or yarn
+- npm
 
 ### Installation
 
@@ -60,38 +53,14 @@ git clone https://github.com/preiyalthakkar3007/habit-cost-calculator.git
 cd habit-cost-calculator
 ```
 
-2. **Set up the backend**
-```bash
-# Create virtual environment
-python -m venv venv
-
-# Activate virtual environment
-# On Windows:
-venv\Scripts\activate
-# On macOS/Linux:
-source venv/bin/activate
-
-# Install dependencies
-pip install flask flask-cors
-```
-
-3. **Set up the frontend**
+2. **Install dependencies**
 ```bash
 cd frontend
 npm install
 ```
 
-4. **Run the application**
-
-**Terminal 1 - Backend:**
+3. **Run the app**
 ```bash
-# From project root, with venv activated
-python app.py
-```
-
-**Terminal 2 - Frontend:**
-```bash
-cd frontend
 npm start
 ```
 
@@ -129,10 +98,7 @@ The app provides three types of cost awareness:
 
 ## 🎨 Live Demo
 
-**Frontend:** https://habit-cost-calculator-39gk.vercel.app  
-**Backend API:** https://habit-cost-calculator-backend.onrender.com
-
-⚠️ **Note:** The first load may take 30-60 seconds as the free backend server spins up from sleep.
+**https://habit-cost-calculator-39gk.vercel.app**
 
 ## Screenshots
 
